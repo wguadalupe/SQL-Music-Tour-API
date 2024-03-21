@@ -6,8 +6,20 @@ const { Sequelize } = require('sequelize');
 const app = express();
 
 // Sequelize instance for database connection
-const sequelize = new Sequelize(`postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:5432/music_tour`);
-
+// const sequelize = new Sequelize(`postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:5432/music_tour`);
+const sequelize = new Sequelize('music_tour', 'postgres', '1978@Guad', {
+    host: 'localhost',
+    dialect: 'postgres',
+  });
+  
+  (async () => {
+      try {
+          await sequelize.authenticate();
+          console.log('Connection has been established successfully.');
+      } catch (error) {
+          console.error('Unable to connect to the database:', error);
+      }
+  })();
 (async () => {
     try {
         await sequelize.authenticate();
