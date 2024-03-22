@@ -1,4 +1,5 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -7,27 +8,31 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.DataTypes.INTEGER
       },
       meetGreet_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false, 
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
       },
       available_start_time: {
-        type: Sequelize.DATE
+        type: Sequelize.DataTypes.DATE,
+        allowNull: false
       },
       end_time: {
-        type: Sequelize.DATE
+        type: Sequelize.DataTypes.DATE,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DataTypes.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DataTypes.DATE
       }
     });
   },

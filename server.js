@@ -1,25 +1,20 @@
-// DEPENDENCIES
 require('dotenv').config();
 const express = require('express');
 const { Sequelize } = require('sequelize');
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Sequelize instance for database connection
-// const sequelize = new Sequelize(`postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:5432/music_tour`);
-const sequelize = new Sequelize('music_tour', 'postgres', '1978@Guad', {
-    host: 'localhost',
-    dialect: 'postgres',
-  });
-  
-  (async () => {
-      try {
-          await sequelize.authenticate();
-          console.log('Connection has been established successfully.');
-      } catch (error) {
-          console.error('Unable to connect to the database:', error);
-      }
-  })();
+// Explicitly create the connection string or use DB_CONNECTION if directly provided
+const connectionString = process.env.DB_CONNECTION || `${process.env.DB_DIALECT}://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASS)}@${process.env.DB_HOST}/${process.env.DB_NAME}`;
+
+// Initialize Sequelize with the connection string and explicitly set the dialect
+const sequelize = new Sequelize(process.env.DB_CONNECTION, {
+  dialect: process.env.DB_DIALECT || 'postgres' // Default to 'postgres' if not specified
+});
+
 (async () => {
     try {
         await sequelize.authenticate();
@@ -29,21 +24,20 @@ const sequelize = new Sequelize('music_tour', 'postgres', '1978@Guad', {
     }
 })();
 
-// CONFIGURATION / MIDDLEWARE
+app.use(helmet());
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// CONTROLLERS
 const bandsController = require('./controllers/bands_controller');
 app.use('/bands', bandsController);
 
-// ROOT ROUTE
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Welcome to the Tour API' });
+    res.status(200).json({ message: 'Welcome to the Music Tour API' });
 });
 
-
-// SERVER LISTEN
-app.listen(process.env.PORT, () => {
-    console.log(`🎸 Rockin' on port: ${process.env.PORT}`);
+app.listen(port, () => {
+    console.log(`🎸 Rockin' on port: ${port}`);
+}).on('error', (err) => {
+    console.error('Error starting server:', err);
 });
